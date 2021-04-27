@@ -2,10 +2,6 @@ from aiogram.types import ReplyKeyboardRemove, \
     ReplyKeyboardMarkup, KeyboardButton, \
     InlineKeyboardMarkup, InlineKeyboardButton
 
-# кнопки выхода
-# buttonExit = KeyboardButton('/exit')
-# buttonHelp = KeyboardButton('/help')
-# kbExitAndHelp = ReplyKeyboardMarkup(resize_keyboard=True).row(buttonExit, buttonHelp)
 
 # кнопка старта
 btnStart = KeyboardButton('/start')

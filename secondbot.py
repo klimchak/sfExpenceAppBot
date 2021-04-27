@@ -1,17 +1,13 @@
-from aiogram import Bot, types                  
-from aiogram.dispatcher import Dispatcher
-from aiogram.utils import executor                                      # подключение библиотеки бота
+from aiogram import Bot, types                                          # подключение библиотеки бота
+from aiogram.dispatcher import Dispatcher                               # -//-
+from aiogram.utils import executor                                      # -//-
 import logging                                                          # библиотека логирования 
 from email_validator import validate_email, EmailNotValidError          # библиотека валидации имейла
 from config import BOT_TOKEN                                            # config bot
 import keyboard                                                         # keyboard
 import sffunc                                                           # sf function
 import datetime
-from telegramcalendar import create_calendar
-# import asyncio
-# from contextlib import suppress
-# from aiogram.utils.exceptions import (MessageToEditNotFound, MessageCantBeEdited, MessageCantBeDeleted,
-#                                       MessageToDeleteNotFound)
+from telegramcalendar import create_calendar                            # для календаря
 
 
 current_shown_dates={}
@@ -86,36 +82,8 @@ async def process_start_command(message: types.Message):
         if i == 1:
             await bot.delete_message(message.chat.id, message.message_id)
         if i == 0: 
-            messs = await bot.send_message(message.chat.id, "Введите логин")
+            messs = await bot.send_message(message.chat.id, "Введите логин", reply_markup=keyboard.ReplyKeyboardRemove())
             setBotLatestMessageId(messs.message_id)
-
-# @dp.message_handler(commands=['help'])                                                      # дописать помощь при работе
-# async def process_help_command(message: types.Message):
-#     for i in range(2):
-#         if i == 0:
-#            await bot.delete_message(message.chat.id, message.message_id) 
-#         if i == 1:
-#            await bot.send_message(message.chat.id, "Тут может быть ваша реклама.", show_alert=True)
-    
-# @dp.message_handler(commands=['exit'])
-# async def process_help_command(message: types.Message):
-#     cmessageUp(0)
-#     logging.info('\n        Успешный выход пользователя: ' + '\n        '+ str(message.from_user.first_name) + '\n        ' + str(message.from_user.last_name) + '\n        ' + str(message.from_user.username))
-#     for i in range(3):
-#         if i == 1:
-#             await bot.delete_message(msg.chat.id, getBotLatestMessageId())
-#         if i == 2:
-#             messs = await bot.send_message(message.from_user.id, 'Вы вышли из приложения Expense App.\nДля входа введите Email и пароль.', reply_markup=keyboard.ReplyKeyboardRemove())
-#             setBotLatestMessageId(messs.message_id)
-#         if i == 0: 
-#             await bot.delete_message(msg.chat.id, msg.message_id)
-
-# async def delete_message(message: types.Message, sleep_time: int = 0):
-#     await asyncio.sleep(sleep_time)
-#     with suppress(MessageCantBeDeleted, MessageToDeleteNotFound):
-#         await message.delete()
-
-
 
 @dp.callback_query_handler()
 async def process_callback_kb1btn1(callback_query: types.CallbackQuery):
@@ -226,7 +194,6 @@ async def process_callback_kb1btn1(callback_query: types.CallbackQuery):
                 if i == 0:  
                     await bot.delete_message(callback_query.from_user.id, getBotLatestMessageId())
         else:
-            # add your reaction for shown an error
             pass
     
     if 'MONTH' in callback_query.data:
@@ -257,7 +224,7 @@ async def process_callback_kb1btn1(callback_query: types.CallbackQuery):
                 await bot.delete_message(callback_query.from_user.id, getBotLatestMessageId())
     
     if "IGNORE" in callback_query.data:
-        await bot.answer_callback_query(callback_query.id, "Это поле пустое. 🙏 не тыкайте в него")
+        await bot.answer_callback_query(callback_query.id, "Это поле пустое. 🙏 не используйте его")
    
     else:
         await bot.answer_callback_query(callback_query.id, text='😐 что-то пошло не по плану...')
@@ -294,9 +261,16 @@ async def echo_message(msg: types.Message):
         dataLogin = sffunc.auth(emailVar, msg.text)
         if dataLogin['totalSize'] == 1:
             if dataLogin['records'][0]['Admin__c'] == True:
-                cmessageUp(2)
+                cmessageUp(0)
                 logging.info('\n        Успешный вход администратора: ' + dataLogin['records'][0]['LastName'] + '\n        Email: ' + dataLogin['records'][0]['Email'])
-                await bot.send_message(msg.from_user.id, 'Добро пожаловать Администратор!', reply_markup=keyboard.kbExitAndHelp)
+                for i in range(3):
+                    if i == 1:
+                        await bot.delete_message(msg.chat.id, getBotLatestMessageId())
+                    if i == 2:
+                        mess = await bot.send_message(msg.from_user.id, 'К сожалению для администратора возможностей нет. Воспользуйтесь браузером.', reply_markup=keyboard.kbStart)
+                        setBotLatestMessageId(mess.message_id)
+                    if i == 0: 
+                        await bot.delete_message(msg.chat.id, msg.message_id)
             else:
                 setIdContact(dataLogin['records'][0]['Id'])
                 logging.info('\n        Успешный вход пользователя: ' + dataLogin['records'][0]['LastName'] + '\n        Офис: ' + dataLogin['records'][0]['Office__c'] + '\n        Email: ' + dataLogin['records'][0]['Email'])
@@ -305,8 +279,6 @@ async def echo_message(msg: types.Message):
                 for i in range(4):
                     if i == 2:
                         await bot.send_message(msg.from_user.id, 'Добро пожаловать ' + dataLogin['records'][0]['LastName'] + '\nВаш офис: ' + dataLogin['records'][0]['Office__c'] + '\nДата и время входа: ' + str(dateLogin)[0:19])
-                        # g = 
-                        # asyncio.create_task(delete_message(g, 10))
                     elif i == 3:
                         mess = await bot.send_message(msg.from_user.id, 'Ваши дальнейшие действия?', reply_markup=keyboard.inlineKbAfterLogin)
                         setBotLatestMessageId(mess.message_id)
@@ -324,8 +296,8 @@ async def echo_message(msg: types.Message):
                     setBotLatestMessageId(mess.message_id)
                 if i == 0: 
                     await bot.delete_message(msg.chat.id, msg.message_id)
-    elif cmessage == 2:  # действия админа
-        await bot.send_message(msg.from_user.id, 'админ ' + msg.text)
+    # elif cmessage == 2:  # действия админа
+        # await bot.send_message(msg.from_user.id, 'админ ' + msg.text)
     elif cmessage == 3:  # действия пользователя
         cmessageUp(3)
         for i in range(3):
