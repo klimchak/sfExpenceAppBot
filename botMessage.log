@@ -1,0 +1,126 @@
+INFO:root:
+        Успешный вход пользователя: Klimchik
+        Офис: Office 1
+        Email: shpektras@gmail.com
+ERROR:asyncio:Task exception was never retrieved
+future: <Task finished name='Task-291' coro=<Dispatcher._process_polling_updates() done, defined at C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\dispatcher.py:401> exception=SalesforceMalformedRequest('https://klimiii3-dev-ed.my.salesforce.com/services/data/v42.0/sobjects/ExpenseCard__c/', 400, 'ExpenseCard__c', [{'message': 'insertExpCardTrigger: System.LimitException: Can only throw this exception type from VisualForce or Aura context', 'errorCode': 'CANNOT_INSERT_UPDATE_ACTIVATE_ENTITY', 'fields': []}])>
+Traceback (most recent call last):
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\dispatcher.py", line 409, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\dispatcher.py", line 238, in process_updates
+    return await asyncio.gather(*tasks)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\dispatcher.py", line 286, in process_update
+    return await self.callback_query_handlers.notify(update.callback_query)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "C:\Users\klim\Documents\vs code salesfoce\sfExpenceAppBot\secondbot.py", line 133, in process_callback_kb1btn1
+    result = sffunc.setNewExpCard(getIdContact(), getDateExpCard(), getCurrExpCard(), getDescrExpCard())
+  File "C:\Users\klim\Documents\vs code salesfoce\sfExpenceAppBot\sffunc.py", line 24, in setNewExpCard
+    data = sf.ExpenseCard__c.create({'Amount__c' : currNewExpCard, 'CardDate__c' : dateNewExpCard, 'CardKeeper__c' : userIdContact, 'Description__c' : descrNewExpCard})
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\simple_salesforce\api.py", line 776, in create
+    result = self._call_salesforce(
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\simple_salesforce\api.py", line 908, in _call_salesforce
+    exception_handler(result, self.name)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\simple_salesforce\util.py", line 68, in exception_handler
+    raise exc_cls(result.url, result.status_code, name, response_content)
+simple_salesforce.exceptions.SalesforceMalformedRequest: Malformed request https://klimiii3-dev-ed.my.salesforce.com/services/data/v42.0/sobjects/ExpenseCard__c/. Response content: [{'message': 'insertExpCardTrigger: System.LimitException: Can only throw this exception type from VisualForce or Aura context', 'errorCode': 'CANNOT_INSERT_UPDATE_ACTIVATE_ENTITY', 'fields': []}]
+ERROR:asyncio:Task exception was never retrieved
+future: <Task finished name='Task-300' coro=<Dispatcher._process_polling_updates() done, defined at C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\dispatcher.py:401> exception=SalesforceMalformedRequest('https://klimiii3-dev-ed.my.salesforce.com/services/data/v42.0/sobjects/ExpenseCard__c/', 400, 'ExpenseCard__c', [{'message': 'insertExpCardTrigger: System.LimitException: Can only throw this exception type from VisualForce or Aura context', 'errorCode': 'CANNOT_INSERT_UPDATE_ACTIVATE_ENTITY', 'fields': []}])>
+Traceback (most recent call last):
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\dispatcher.py", line 409, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\dispatcher.py", line 238, in process_updates
+    return await asyncio.gather(*tasks)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\dispatcher.py", line 286, in process_update
+    return await self.callback_query_handlers.notify(update.callback_query)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "C:\Users\klim\Documents\vs code salesfoce\sfExpenceAppBot\secondbot.py", line 133, in process_callback_kb1btn1
+    result = sffunc.setNewExpCard(getIdContact(), getDateExpCard(), getCurrExpCard(), getDescrExpCard())
+  File "C:\Users\klim\Documents\vs code salesfoce\sfExpenceAppBot\sffunc.py", line 24, in setNewExpCard
+    data = sf.ExpenseCard__c.create({'Amount__c' : currNewExpCard, 'CardDate__c' : dateNewExpCard, 'CardKeeper__c' : userIdContact, 'Description__c' : descrNewExpCard})
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\simple_salesforce\api.py", line 776, in create
+    result = self._call_salesforce(
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\simple_salesforce\api.py", line 908, in _call_salesforce
+    exception_handler(result, self.name)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\simple_salesforce\util.py", line 68, in exception_handler
+    raise exc_cls(result.url, result.status_code, name, response_content)
+simple_salesforce.exceptions.SalesforceMalformedRequest: Malformed request https://klimiii3-dev-ed.my.salesforce.com/services/data/v42.0/sobjects/ExpenseCard__c/. Response content: [{'message': 'insertExpCardTrigger: System.LimitException: Can only throw this exception type from VisualForce or Aura context', 'errorCode': 'CANNOT_INSERT_UPDATE_ACTIVATE_ENTITY', 'fields': []}]
+INFO:root:
+Создана карта пользователем 0035g000001lnCTAAY
+Данные карты
+INFO:root:OrderedDict([('id', 'a025g000003MW9oAAG'), ('success', True), ('errors', [])])
+INFO:root:
+Создана карта пользователем 0035g000001lnCTAAY
+Данные карты
+INFO:root:OrderedDict([('id', 'a025g000003MW9tAAG'), ('success', True), ('errors', [])])
+INFO:root:
+        Успешный выход пользователя: 
+        Илья
+        Климчик
+        None
+ERROR:asyncio:Task exception was never retrieved
+future: <Task finished name='Task-373' coro=<Dispatcher._process_polling_updates() done, defined at C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\dispatcher.py:401> exception=MessageToDeleteNotFound('Message to delete not found')>
+Traceback (most recent call last):
+  File "C:\Users\klim\Documents\vs code salesfoce\sfExpenceAppBot\secondbot.py", line 238, in echo_message
+    valid = validate_email(emailvar)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\email_validator\__init__.py", line 208, in validate_email
+    raise EmailSyntaxError("The email address is not valid. It must have exactly one @-sign.")
+email_validator.EmailSyntaxError: The email address is not valid. It must have exactly one @-sign.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\dispatcher.py", line 409, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\dispatcher.py", line 238, in process_updates
+    return await asyncio.gather(*tasks)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\dispatcher.py", line 259, in process_update
+    return await self.message_handlers.notify(update.message)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\dispatcher\handler.py", line 116, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "C:\Users\klim\Documents\vs code salesfoce\sfExpenceAppBot\secondbot.py", line 259, in echo_message
+    await bot.delete_message(msg.chat.id, getBotLatestMessageId())
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\bot\bot.py", line 2485, in delete_message
+    return await self.request(api.Methods.DELETE_MESSAGE, payload)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\bot\base.py", line 208, in request
+    return await api.make_request(self.session, self.server, self.__token, method, data, files,
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\bot\api.py", line 140, in make_request
+    return check_result(method, response.content_type, response.status, await response.text())
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\bot\api.py", line 115, in check_result
+    exceptions.BadRequest.detect(description)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\utils\exceptions.py", line 140, in detect
+    raise err(cls.text or description)
+aiogram.utils.exceptions.MessageToDeleteNotFound: Message to delete not found
+INFO:root:
+        Успешный вход пользователя: Klimchik
+        Офис: Office 1
+        Email: shpektras@gmail.com
+INFO:root:
+Создана карта пользователем 0035g000001lnCTAAY
+Данные карты
+INFO:root:OrderedDict([('id', 'a025g000003MW9yAAG'), ('success', True), ('errors', [])])
+INFO:root:
+Создана карта пользователем 0035g000001lnCTAAY
+Данные карты
+INFO:root:OrderedDict([('id', 'a025g000003MWA3AAO'), ('success', True), ('errors', [])])
+INFO:root:
+        Успешный выход пользователя: 
+        Илья
+        Климчик
+        None
+INFO:root:
+        Успешный вход пользователя: Klimchik
+        Офис: Office 1
+        Email: shpektras@gmail.com
+INFO:root:
+        Успешный выход пользователя: 
+        Илья
+        Климчик
+        None

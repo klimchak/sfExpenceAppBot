@@ -159,7 +159,8 @@ async def process_callback_kb1btn1(callback_query: types.CallbackQuery):
                 await bot.delete_message(callback_query.from_user.id, getBotLatestMessageId())
         
     if code == 'help':
-        await bot.answer_callback_query(callback_query.id, "А тут хелп", show_alert=True)
+        helpText = 'Взаимодействие с ботом осуществляется посредством кнопок.\nДля выполнения необходимых действий следуйте подсказкам.\np.s. это первый бот и первый опыт программирования на Python'
+        await bot.answer_callback_query(callback_query.id, helpText, show_alert=True)
 
     if code == 'opencalendar':
         now = datetime.datetime.now()
