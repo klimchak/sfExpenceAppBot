@@ -1,21 +1,6 @@
 from aiogram import Bot, types                                          # подключение библиотеки бота
 from aiogram.dispatcher import Dispatcher                               # -//-
 from aiogram.utils import executor                                      # -//-
-# from aiogram.contrib.middlewares.logging import LoggingMiddleware
-# from aiogram.dispatcher.webhook import SendMessage
-# from aiogram.utils.executor import start_webhook
-	
-
-import asyncio
-from aiohttp import web
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher.webhook import get_new_configured_app, SendMessage
-from aiogram.types import ChatType, ParseMode, ContentTypes
-from aiogram.utils.markdown import hbold, bold, text, link
-
-
-
-
 import logging                                                          # библиотека логирования 
 from email_validator import validate_email, EmailNotValidError          # библиотека валидации имейла
 from config import BOT_TOKEN                                            # config bot
@@ -23,50 +8,12 @@ import keyboard                                                         # keyboa
 import sffunc                                                           # sf function
 import datetime
 from telegramcalendar import create_calendar                            # для календаря
-
-
+from keyboard import kbStart, inlineKbAfterLogin, inlineKbAfterSetNewCard, inlineKbAnsSetCardOrNot
+from aiogram.types import ReplyKeyboardRemove
 current_shown_dates={}
-# bot = Bot(token=BOT_TOKEN)
-# dp = Dispatcher(bot)
-logging.basicConfig(filename='botMessage.log', level=logging.INFO)
-
-# webhook settings
-WEBHOOK_HOST  = 'https://expapptelegrambot.herokuapp.com'
-WEBHOOK_URL_PATH  = '/webhook'
-WEBHOOK_PORT  = 443
-WEBHOOK_URL = f"https://{WEBHOOK_HOST}:{WEBHOOK_PORT}{WEBHOOK_URL_PATH}"
-
-# webserver settings
-WEBAPP_HOST = 'localhost'  # or ip
-WEBAPP_PORT = 3001
-
-# dp.middleware.setup(LoggingMiddleware())
-loop = asyncio.get_event_loop()
 bot = Bot(token=BOT_TOKEN)
-storage = MemoryStorage()
-dp = Dispatcher(bot, storage=storage)
-
-async def on_startup(dp):
-    await bot.set_webhook(WEBHOOK_URL)
-    # insert code here to run it after start
-
-
-async def on_shutdown(dp):
-    logging.warning('Shutting down..')
-
-    # insert code here to run it before shutdown
-
-    # Remove webhook (not acceptable in some cases)
-    await bot.delete_webhook()
-
-    # Close DB connection (if used)
-    await dp.storage.close()
-    await dp.storage.wait_closed()
-
-    logging.warning('Bye!')
-
-
-
+dp = Dispatcher(bot)
+logging.basicConfig(filename='botMessage.log', level=logging.INFO)
 
 # cmessage == 0 - старт и просьба входа. будет требовать логин
 # cmessage == 1 - будет требовать пароль
@@ -135,7 +82,7 @@ async def process_start_command(message: types.Message):
         if i == 1:
             await bot.delete_message(message.chat.id, message.message_id)
         if i == 0: 
-            messs = await bot.send_message(message.chat.id, "Введите логин", reply_markup=keyboard.ReplyKeyboardRemove())
+            messs = await bot.send_message(message.chat.id, "Введите логин", reply_markup=ReplyKeyboardRemove())
             setBotLatestMessageId(messs.message_id)
 
 @dp.callback_query_handler()
@@ -153,7 +100,7 @@ async def process_callback_kb1btn1(callback_query: types.CallbackQuery):
             if i == 1:
                 await bot.answer_callback_query(callback_query.id)
             if i == 2:
-                messs = await bot.send_message(callback_query.from_user.id, 'На какой день желаете создать карточку?', reply_markup=keyboard.inlineKbAfterSetNewCard)
+                messs = await bot.send_message(callback_query.from_user.id, 'На какой день желаете создать карточку?', reply_markup=inlineKbAfterSetNewCard)
                 setBotLatestMessageId(messs.message_id)
             if i == 0:
                 await bot.delete_message(callback_query.from_user.id, getBotLatestMessageId())
@@ -163,7 +110,7 @@ async def process_callback_kb1btn1(callback_query: types.CallbackQuery):
             if i == 1:
                 await bot.answer_callback_query(callback_query.id, 'Понял. Возвращаемся назад 😒')
             if i == 2:
-                messs = await bot.send_message(callback_query.from_user.id, 'Какую операцию желаете выполнить?', reply_markup=keyboard.inlineKbAfterLogin)
+                messs = await bot.send_message(callback_query.from_user.id, 'Какую операцию желаете выполнить?', reply_markup=inlineKbAfterLogin)
                 setBotLatestMessageId(messs.message_id)
             if i == 0:  
                 await bot.delete_message(callback_query.from_user.id, getBotLatestMessageId())
@@ -192,7 +139,7 @@ async def process_callback_kb1btn1(callback_query: types.CallbackQuery):
                 if i == 2:
                     await bot.send_message(callback_query.from_user.id, "Усешно! Новая карточка расходов добавлена.\nДанные карточки:" + '\n- дата карточки: ' + getDateExpCard() + '\n- сумма: ' + getCurrExpCard()  + '\n- описание траты: ' + getDescrExpCard())
                 if i == 3:
-                    mess = await bot.send_message(callback_query.from_user.id, 'Ваши дальнейшие действия? ', reply_markup=keyboard.inlineKbAfterLogin)
+                    mess = await bot.send_message(callback_query.from_user.id, 'Ваши дальнейшие действия? ', reply_markup=inlineKbAfterLogin)
                     setBotLatestMessageId(mess.message_id)                
                 if i == 0:  
                     await bot.delete_message(callback_query.from_user.id, getBotLatestMessageId())
@@ -207,7 +154,7 @@ async def process_callback_kb1btn1(callback_query: types.CallbackQuery):
             if i == 1:
                 await bot.answer_callback_query(callback_query.id)
             if i == 2:
-                await bot.send_message(callback_query.from_user.id, 'Вы вышли из приложения Expense App.\nДля входа нажмите /start и введите Email и пароль.', reply_markup=keyboard.kbStart)        
+                await bot.send_message(callback_query.from_user.id, 'Вы вышли из приложения Expense App.\nДля входа нажмите /start и введите Email и пароль.', reply_markup=kbStart)        
             if i == 0:  
                 await bot.delete_message(callback_query.from_user.id, getBotLatestMessageId())
         
@@ -321,7 +268,7 @@ async def echo_message(msg: types.Message):
                     if i == 1:
                         await bot.delete_message(msg.chat.id, getBotLatestMessageId())
                     if i == 2:
-                        mess = await bot.send_message(msg.from_user.id, 'К сожалению для администратора возможностей нет. Воспользуйтесь браузером.', reply_markup=keyboard.kbStart)
+                        mess = await bot.send_message(msg.from_user.id, 'К сожалению для администратора возможностей нет. Воспользуйтесь браузером.', reply_markup=kbStart)
                         setBotLatestMessageId(mess.message_id)
                     if i == 0: 
                         await bot.delete_message(msg.chat.id, msg.message_id)
@@ -334,7 +281,7 @@ async def echo_message(msg: types.Message):
                     if i == 2:
                         await bot.send_message(msg.from_user.id, 'Добро пожаловать ' + dataLogin['records'][0]['LastName'] + '\nВаш офис: ' + dataLogin['records'][0]['Office__c'] + '\nДата и время входа: ' + str(dateLogin)[0:19])
                     elif i == 3:
-                        mess = await bot.send_message(msg.from_user.id, 'Ваши дальнейшие действия?', reply_markup=keyboard.inlineKbAfterLogin)
+                        mess = await bot.send_message(msg.from_user.id, 'Ваши дальнейшие действия?', reply_markup=inlineKbAfterLogin)
                         setBotLatestMessageId(mess.message_id)
                     elif i == 1:
                         await bot.delete_message(msg.chat.id, msg.message_id)
@@ -358,7 +305,7 @@ async def echo_message(msg: types.Message):
             if i == 1:
                 await bot.delete_message(msg.chat.id, getBotLatestMessageId())
             if i == 2:
-                mess = await bot.send_message(msg.from_user.id, 'Извините. Я Вас не понял 😐\nВоспользуйтесь кнопками ниже 👇', reply_markup=keyboard.inlineKbAfterLogin)
+                mess = await bot.send_message(msg.from_user.id, 'Извините. Я Вас не понял 😐\nВоспользуйтесь кнопками ниже 👇', reply_markup=inlineKbAfterLogin)
                 setBotLatestMessageId(mess.message_id)
             if i == 0: 
                 await bot.delete_message(msg.chat.id, msg.message_id)
@@ -382,39 +329,10 @@ async def echo_message(msg: types.Message):
             if i == 1:
                 await bot.delete_message(msg.chat.id, msg.message_id)
             if i == 2:
-                messs = await bot.send_message(msg.from_user.id, 'Данные для новой карточки: ' + '\n' + getCurrExpCard() + '\n' + getDateExpCard() + '\n' + getDescrExpCard(), reply_markup=keyboard.inlineKbAnsSetCardOrNot)
+                messs = await bot.send_message(msg.from_user.id, 'Данные для новой карточки: ' + '\n' + getCurrExpCard() + '\n' + getDateExpCard() + '\n' + getDescrExpCard(), reply_markup=inlineKbAnsSetCardOrNot)
                 setBotLatestMessageId(messs.message_id)
             if i == 0:  
                 await bot.delete_message(msg.chat.id, getBotLatestMessageId())
 
-# if __name__ == '__main__':
-    # executor.start_polling(dp)
-
-# if __name__ == '__main__':
-#     start_webhook(
-#         dispatcher=dp,
-#         webhook_path=WEBHOOK_PATH,
-#         on_startup=on_startup,
-#         on_shutdown=on_shutdown,
-#         skip_updates=True,
-#         host=WEBAPP_HOST,
-#         port=WEBAPP_PORT,
-#     )
-
 if __name__ == '__main__':
-    # Get instance of :class:`aiohttp.web.Application` with configured router.
-    app = get_new_configured_app(dispatcher=dp, path=WEBHOOK_URL_PATH)
-
-    # Setup event handlers.
-    app.on_startup.append(on_startup)
-    app.on_shutdown.append(on_shutdown)
-
-    # Generate SSL context
-    # context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-    # context.load_cert_chain(WEBHOOK_SSL_CERT, WEBHOOK_SSL_PRIV)
-
-    # Start web-application.
-    web.run_app(app, host=WEBAPP_HOST, port=WEBAPP_PORT)
-    # Note:
-    #   If you start your bot using nginx or Apache web server, SSL context is not required.
-    #   Otherwise you need to set `ssl_context` parameter.
+    executor.start_polling(dp)
