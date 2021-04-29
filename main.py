@@ -1,6 +1,21 @@
 from aiogram import Bot, types                                          # подключение библиотеки бота
 from aiogram.dispatcher import Dispatcher                               # -//-
 from aiogram.utils import executor                                      # -//-
+# from aiogram.contrib.middlewares.logging import LoggingMiddleware
+# from aiogram.dispatcher.webhook import SendMessage
+# from aiogram.utils.executor import start_webhook
+	
+
+import asyncio
+from aiohttp import web
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.dispatcher.webhook import get_new_configured_app, SendMessage
+from aiogram.types import ChatType, ParseMode, ContentTypes
+from aiogram.utils.markdown import hbold, bold, text, link
+
+
+
+
 import logging                                                          # библиотека логирования 
 from email_validator import validate_email, EmailNotValidError          # библиотека валидации имейла
 from config import BOT_TOKEN                                            # config bot
@@ -11,9 +26,47 @@ from telegramcalendar import create_calendar                            # для
 
 
 current_shown_dates={}
-bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher(bot)
+# bot = Bot(token=BOT_TOKEN)
+# dp = Dispatcher(bot)
 logging.basicConfig(filename='botMessage.log', level=logging.INFO)
+
+# webhook settings
+WEBHOOK_HOST  = 'https://expapptelegrambot.herokuapp.com'
+WEBHOOK_URL_PATH  = '/webhook'
+WEBHOOK_PORT  = 443
+WEBHOOK_URL = f"https://{WEBHOOK_HOST}:{WEBHOOK_PORT}{WEBHOOK_URL_PATH}"
+
+# webserver settings
+WEBAPP_HOST = 'localhost'  # or ip
+WEBAPP_PORT = 3001
+
+# dp.middleware.setup(LoggingMiddleware())
+loop = asyncio.get_event_loop()
+bot = Bot(token=BOT_TOKEN)
+storage = MemoryStorage()
+dp = Dispatcher(bot, storage=storage)
+
+async def on_startup(dp):
+    await bot.set_webhook(WEBHOOK_URL)
+    # insert code here to run it after start
+
+
+async def on_shutdown(dp):
+    logging.warning('Shutting down..')
+
+    # insert code here to run it before shutdown
+
+    # Remove webhook (not acceptable in some cases)
+    await bot.delete_webhook()
+
+    # Close DB connection (if used)
+    await dp.storage.close()
+    await dp.storage.wait_closed()
+
+    logging.warning('Bye!')
+
+
+
 
 # cmessage == 0 - старт и просьба входа. будет требовать логин
 # cmessage == 1 - будет требовать пароль
@@ -334,5 +387,34 @@ async def echo_message(msg: types.Message):
             if i == 0:  
                 await bot.delete_message(msg.chat.id, getBotLatestMessageId())
 
+# if __name__ == '__main__':
+    # executor.start_polling(dp)
+
+# if __name__ == '__main__':
+#     start_webhook(
+#         dispatcher=dp,
+#         webhook_path=WEBHOOK_PATH,
+#         on_startup=on_startup,
+#         on_shutdown=on_shutdown,
+#         skip_updates=True,
+#         host=WEBAPP_HOST,
+#         port=WEBAPP_PORT,
+#     )
+
 if __name__ == '__main__':
-    executor.start_polling(dp)
+    # Get instance of :class:`aiohttp.web.Application` with configured router.
+    app = get_new_configured_app(dispatcher=dp, path=WEBHOOK_URL_PATH)
+
+    # Setup event handlers.
+    app.on_startup.append(on_startup)
+    app.on_shutdown.append(on_shutdown)
+
+    # Generate SSL context
+    # context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+    # context.load_cert_chain(WEBHOOK_SSL_CERT, WEBHOOK_SSL_PRIV)
+
+    # Start web-application.
+    web.run_app(app, host=WEBAPP_HOST, port=WEBAPP_PORT)
+    # Note:
+    #   If you start your bot using nginx or Apache web server, SSL context is not required.
+    #   Otherwise you need to set `ssl_context` parameter.

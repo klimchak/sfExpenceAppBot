@@ -124,3 +124,41 @@ INFO:root:
         Илья
         Климчик
         None
+INFO:aiogram:Bot: SF Expense App bot [@SF_Expense_App_bot]
+INFO:aiogram.dispatcher.dispatcher:Start polling.
+INFO:aiogram.dispatcher.dispatcher:Stop polling...
+WARNING:aiogram:Goodbye!
+INFO:aiogram:Bot: SF Expense App bot [@SF_Expense_App_bot]
+WARNING:aiogram:Updates were skipped successfully.
+WARNING:root:Shutting down..
+WARNING:root:Bye!
+ERROR:asyncio:unhandled exception during asyncio.run() shutdown
+task: <Task finished name='Task-1' coro=<_run_app() done, defined at C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiohttp\web.py:287> exception=BadWebhookNoAddressAssociatedWithHostname('Bad webhook: failed to resolve host: no address associated with hostname')>
+Traceback (most recent call last):
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiohttp\web.py", line 508, in run_app
+    loop.run_until_complete(main_task)
+  File "C:\Program Files\Python39\lib\asyncio\base_events.py", line 642, in run_until_complete
+    return future.result()
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiohttp\web.py", line 319, in _run_app
+    await runner.setup()
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiohttp\web_runner.py", line 275, in setup
+    self._server = await self._make_server()
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiohttp\web_runner.py", line 375, in _make_server
+    await self._app.startup()
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiohttp\web_app.py", line 416, in startup
+    await self.on_startup.send(self)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiohttp\signals.py", line 34, in send
+    await receiver(*args, **kwargs)  # type: ignore
+  File "C:\Users\klim\Documents\vs code salesfoce\sfExpenceAppBot\main.py", line 50, in on_startup
+    await bot.set_webhook(WEBHOOK_URL)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\bot\bot.py", line 164, in set_webhook
+    return await self.request(api.Methods.SET_WEBHOOK, payload, files)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\bot\base.py", line 208, in request
+    return await api.make_request(self.session, self.server, self.__token, method, data, files,
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\bot\api.py", line 140, in make_request
+    return check_result(method, response.content_type, response.status, await response.text())
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\bot\api.py", line 115, in check_result
+    exceptions.BadRequest.detect(description)
+  File "C:\Users\klim\AppData\Roaming\Python\Python39\site-packages\aiogram\utils\exceptions.py", line 140, in detect
+    raise err(cls.text or description)
+aiogram.utils.exceptions.BadWebhookNoAddressAssociatedWithHostname: Bad webhook: failed to resolve host: no address associated with hostname
